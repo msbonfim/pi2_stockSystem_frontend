@@ -1,18 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>vital-stock</title>
+    <meta name="theme-color" content="#1a1a1a" />
+    
+    <!-- Ícone padrão e ícone para iOS -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
+    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
 
-    <meta property="og:title" content="vital-stock" />
+    <!-- Manifest PWA -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Metadados -->
+    <title>StockSystem - Gestão de Estoque</title>
+    <meta name="description" content="Sistema de gestão de estoque e validade de produtos." />
+
+    <meta property="og:title" content="StockSystem - Gestão de Estoque" />
     <meta property="og:type" content="website" />
-
+    <meta property="og:image" content="/pwa-512x512.png" />
     <meta name="twitter:card" content="summary_large_image" />
   </head>
 
   <body>
     <div id="root"></div>
+
+    <!-- Código principal do app -->
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Registro do Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/service-worker.js')
+            .then(() => console.log('✅ Service Worker registrado com sucesso!'))
+            .catch(err => console.error('❌ Erro ao registrar o Service Worker:', err));
+        });
+      }
+    </script>
   </body>
 </html>
