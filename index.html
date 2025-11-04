@@ -28,16 +28,7 @@
     <!-- Código principal do app -->
     <script type="module" src="/src/main.tsx"></script>
 
-    <!-- Registro do Service Worker -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker
-            .register('/service-worker.js')
-            .then(() => console.log('✅ Service Worker registrado com sucesso!'))
-            .catch(err => console.error('❌ Erro ao registrar o Service Worker:', err));
-        });
-      }
-    </script>
+    <!-- Service Worker é registrado automaticamente pelo vite-plugin-pwa em main.tsx -->
+    <!-- Não precisa registrar manualmente aqui para evitar duplicação -->
   </body>
 </html>
