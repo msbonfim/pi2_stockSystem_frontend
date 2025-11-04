@@ -30,6 +30,14 @@ class PushNotificationService {
         return true;
       }
 
+      // Verificar se a chave VAPID está configurada antes de solicitar permissão
+      const vapidPublicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
+      if (!vapidPublicKey || vapidPublicKey.trim() === '') {
+        console.warn("⚠️ VITE_VAPID_PUBLIC_KEY não está configurada. Push notifications desabilitadas.");
+        this.isInitialized = true; // Marcar como inicializado para não tentar novamente
+        return false;
+      }
+
       console.log(
         "⚠️ Nenhuma subscription encontrada. Solicitando permissão..."
       );
@@ -37,6 +45,7 @@ class PushNotificationService {
 
       if (permission !== "granted") {
         console.warn("❌ Permissão para notificações foi negada.");
+        this.isInitialized = true; // Marcar como inicializado para não tentar novamente
         return false;
       }
 
@@ -45,6 +54,8 @@ class PushNotificationService {
       return true;
     } catch (error) {
       console.error("❌ Erro ao inicializar push notifications:", error);
+      // Marcar como inicializado para evitar tentativas infinitas
+      this.isInitialized = true;
       return false;
     }
   }
@@ -55,10 +66,15 @@ class PushNotificationService {
       return;
     }
 
+    // Verificar se a chave VAPID está configurada
+    const vapidPublicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
+    if (!vapidPublicKey || vapidPublicKey.trim() === '') {
+      console.warn("⚠️ VITE_VAPID_PUBLIC_KEY não está configurada. Push notifications desabilitadas.");
+      return;
+    }
+
     try {
-      const applicationServerKey = this.urlBase64ToUint8Array(
-        import.meta.env.VITE_VAPID_PUBLIC_KEY
-      );
+      const applicationServerKey = this.urlBase64ToUint8Array(vapidPublicKey);
 
       // Ao inscrever-se, passe um ArrayBuffer (fazendo cast explícito)
       const applicationServerKeyBuffer =
@@ -76,6 +92,7 @@ class PushNotificationService {
       await this.sendSubscriptionToBackend(this.subscription);
     } catch (error) {
       console.error("❌ Erro ao criar subscription:", error);
+      // Não re-throw o erro para evitar loops infinitos
     }
   }
 
@@ -107,6 +124,10 @@ class PushNotificationService {
   }
 
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
+    if (!base64String || typeof base64String !== 'string') {
+      throw new Error('Invalid base64 string provided');
+    }
+    
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding)
       .replace(/-/g, "+")

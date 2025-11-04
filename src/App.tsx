@@ -25,13 +25,21 @@ const App = () => {
           if (success) {
             console.log("✅ Push notifications inicializadas com sucesso!");
           } else {
-            console.warn(
-              "⚠️ Push notifications não foram inicializadas (navegador não suporta ou permissão negada)"
-            );
+            // Não mostrar warning se foi apenas porque a chave VAPID não está configurada
+            // Isso é normal em desenvolvimento ou quando push notifications não são necessárias
+            const vapidKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
+            if (!vapidKey || vapidKey.trim() === '') {
+              console.log("ℹ️ Push notifications desabilitadas (chave VAPID não configurada)");
+            } else {
+              console.warn(
+                "⚠️ Push notifications não foram inicializadas (navegador não suporta ou permissão negada)"
+              );
+            }
           }
         })
         .catch((error) => {
           console.error("❌ Erro ao inicializar push notifications:", error);
+          // Não re-throw para evitar quebrar o app
         });
     }, 1000);
 
