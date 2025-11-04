@@ -1,44 +1,60 @@
-import path from "path" // 1. Importe o 'path'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
+import path from "path"
 import { VitePWA } from 'vite-plugin-pwa'
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate', // Mantém o app do usuário sempre atualizado
+      registerType: 'autoUpdate',
+      // Configura o cache do Service Worker
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,otf}']
+      },
+      // Configura o manifesto da PWA
       manifest: {
-        name: 'StockSystem - Gestão de Estoque', // Nome completo do app
-        short_name: 'StockSystem', // Nome curto que aparece sob o ícone
-        description: 'Sistema de gestão de estoque e validade de produtos.',
-        theme_color: '#1a1a1a', // Cor da barra de status no celular
-        background_color: '#1a1a1a', // Cor da tela de "splash" ao abrir
-        display: 'standalone', // Faz o app abrir sem a barra do navegador
+        name: 'StockSystem',
+        short_name: 'StockSystem',
+        description: 'Sistema de Gestão de Estoque',
+        theme_color: '#ffffff',
+        background_color: '#ffffff',
+        display: 'standalone',
         scope: '/',
         start_url: '/',
         icons: [
           {
-            src: 'pwa-192x192.png', // Caminho para o ícone
-            sizes: '192x192',
+            src: 'pwa-64x64.png',
+            sizes: '64x64',
             type: 'image/png'
           },
           {
-            src: 'pwa-512x512.png', // Caminho para o ícone maior
-            sizes: '512x512',
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
             type: 'image/png'
           },
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable' // Ícone especial para melhor visualização no Android
+            purpose: 'any'  
+          },
+          {
+            src: 'maskable-icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
           }
         ]
+      },
+      // Habilita o modo de desenvolvimento para testar o Service Worker localmente
+      devOptions: {
+        enabled: true
       }
     })
   ],
-  resolve: { // 2. Adicione esta seção 'resolve'
+  resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },

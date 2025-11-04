@@ -9,17 +9,25 @@ export function SimpleDashboard() {
   const [products, setProducts] = useState([
     { id: 1, name: "Produto Teste", quantity: 10, expiryDate: "2024-12-31" }
   ]);
-  const [newProduct, setNewProduct] = useState({ name: "", quantity: 0 });
+  
+  // State for the new product form
+  const [newProduct, setNewProduct] = useState({ name: "", quantity: "" });
 
   const handleAddProduct = () => {
-    if (newProduct.name && newProduct.quantity) {
-      setProducts([...products, {
-        id: products.length + 1,
-        name: newProduct.name,
-        quantity: newProduct.quantity,
-        expiryDate: "2024-12-31"
-      }]);
-      setNewProduct({ name: "", quantity: 0 });
+    const quantityNum = Number(newProduct.quantity);
+    // Ensure name is not empty and quantity is a valid number greater than 0
+    if (newProduct.name && !isNaN(quantityNum) && quantityNum > 0) {
+      setProducts([
+        ...products,
+        {
+          id: products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1, // Safer ID generation
+          name: newProduct.name,
+          quantity: quantityNum,
+          expiryDate: "2024-12-31" // Example date
+        }
+      ]);
+      // Reset the form
+      setNewProduct({ name: "", quantity: "" });
     }
   };
 
@@ -59,7 +67,7 @@ export function SimpleDashboard() {
                 <Input
                   id="name"
                   value={newProduct.name}
-                  onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                  onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
                   placeholder="Ex: Leite Integral"
                 />
               </div>
@@ -69,17 +77,14 @@ export function SimpleDashboard() {
                   id="quantity"
                   type="number"
                   value={newProduct.quantity}
-                  onChange={(e) => setNewProduct({...newProduct, quantity: Number(e.target.value)})}
+                  onChange={(e) => setNewProduct({ ...newProduct, quantity: e.target.value })}
                   placeholder="Ex: 25"
                 />
               </div>
-              {/* <Button onClick={handleAddProduct} className="bg-gradient-primary">
-                <Plus className="mr-2 h-4 w-4" />
-                Adicionar Produto
-              </Button> */}
+              {/* Corrected the button to match its function */}
               <Button onClick={handleAddProduct} className="bg-gradient-primary">
                 <Plus className="mr-2 h-4 w-4" />
-                Login
+                Adicionar Produto
               </Button>
             </div>
           </CardContent>

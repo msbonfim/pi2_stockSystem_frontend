@@ -1,5 +1,9 @@
 // API service para comunicação com Django backend
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://pi2-stocksystem-backend.onrender.com';
+// Detecta automaticamente se está em localhost
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://localhost:8000' 
+    : 'https://pi2-stocksystem-backend.onrender.com');
 
 export interface Product {
   id: number;
@@ -36,6 +40,17 @@ export interface DashboardStats {
   expiring_soon: number;
   low_stock: number;
   good_products: number;
+}
+
+export interface Notification {
+  id: number;
+  title: string;
+  message: string;
+  notification_type: 'expiring_soon' | 'expired' | 'low_stock';
+  read: boolean;
+  product?: number;
+  product_name?: string;
+  created_at: string;
 }
 
 class ApiService {
@@ -110,6 +125,24 @@ class ApiService {
   // Dashboard stats
   async getDashboardStats(): Promise<DashboardStats> {
     return this.request<DashboardStats>('/api/dashboard/stats/');
+  }
+
+  // Notifications endpoints
+  async getNotifications(read?: boolean): Promise<Notification[]> {
+    const params = read !== undefined ? `?read=${read}` : '';
+    return this.request<Notification[]>(`/api/notifications${params}`);
+  }
+
+  async markNotificationRead(id: number): Promise<void> {
+    return this.request<void>(`/api/notifications/${id}/read/`, {
+      method: 'POST',
+    });
+  }
+
+  async markAllNotificationsRead(): Promise<void> {
+    return this.request<void>('/api/notifications/read-all/', {
+      method: 'POST',
+    });
   }
 }
 

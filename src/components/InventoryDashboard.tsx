@@ -10,7 +10,11 @@ import { AlertTriangle, Calendar, Package, LogIn, Search, Filter, TrendingUp, Cl
 import { cn } from "@/lib/utils";
 import { Product, CreateProductRequest } from "@/services/api";
 
-const API_BASE_URL = "https://pi2-stocksystem-backend.onrender.com/api";
+// This should point to your backend. Remember to change it back to the Render URL before deploying.
+// Detecta automaticamente se está em localhost
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+  ? "http://localhost:8000/api"
+  : "https://pi2-stocksystem-backend.onrender.com/api");
 
 export function InventoryDashboard() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -98,7 +102,6 @@ export function InventoryDashboard() {
       case 'critical': return 'bg-gradient-danger shadow-danger border-danger';
       case 'warning': return 'bg-gradient-warning shadow-alert border-warning';
       case 'good': return 'bg-gradient-success shadow-success border-success';
-      // --- ALTERAÇÃO 2: Fundo dos Cards 'Sem Validade' para Cinza ---
       case 'no_expiry': return 'bg-gradient-to-br from-gray-600 to-gray-800 shadow-gray-800/50 border-gray-600';
       default: return 'bg-card';
     }
@@ -106,8 +109,6 @@ export function InventoryDashboard() {
 
   const getStatusBadge = (status: string, days: number) => {
     switch (status) {
-      // --- ALTERAÇÃO 1: Badge 'Vencido' para Roxo ---
-      // Removemos o variant="destructive" e aplicamos classes de cor personalizadas.
       case 'expired': return <Badge className="bg-purple-800 text-white border-purple-900">Vencido</Badge>;
       case 'critical': return <Badge variant="destructive">{days} dia{days !== 1 ? 's' : ''}</Badge>;
       case 'warning': return <Badge className="bg-warning text-warning-foreground">{days} dias</Badge>;
@@ -150,7 +151,10 @@ export function InventoryDashboard() {
     return [...new Set(products.map(p => p.category_name).filter(Boolean))];
   }, [products]);
 
-  const handleAddProduct = async () => { /* ... (função inalterada) ... */ };
+  const handleAddProduct = async () => { 
+    // This function is defined but not currently used since the "Add Product" button is commented out.
+    // If you add the button back, this is where its logic goes.
+  };
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -161,7 +165,8 @@ export function InventoryDashboard() {
             <h1 className="text-3xl font-bold text-foreground">Sistema de Estoque</h1>
             <p className="text-muted-foreground">Controle de validade e gestão de produtos</p>
           </div>
-          <a href="http://localhost:8000/admin/" target="_blank" rel="noopener noreferrer">
+          
+          <a href="https://pi2-stocksystem-backend.onrender.com/admin/" target="_blank" rel="noopener noreferrer">
             <Button className="bg-gradient-primary shadow-lg">
               <LogIn className="mr-2 h-4 w-4" />
               Login
@@ -169,7 +174,7 @@ export function InventoryDashboard() {
           </a>
         </div>
 
-        {/* Cards de estatísticas clicáveis */}
+        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           <Card 
             className={cn("shadow-card cursor-pointer transition-all", activeFilter === 'total' && "ring-2 ring-primary")}
@@ -367,7 +372,6 @@ export function InventoryDashboard() {
             })}
           </div>
         )}
-
       </div>
     </div>
   );

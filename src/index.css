@@ -127,3 +127,217 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Importa a fonte para dislexia */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('./assets/fonts/OpenDyslexic-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('./assets/fonts/OpenDyslexic-Bold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Fonte para Dislexia */
+.dyslexia-font {
+  font-family: 'OpenDyslexic', sans-serif !important;
+}
+
+/* Destacar Links */
+.highlight-links a {
+  text-decoration: underline !important;
+  background-color: rgba(255, 255, 0, 0.3); /* Fundo amarelo translúcido */
+}
+
+/* Estilo para destacar links usando data-attribute */
+body[data-highlight-links='true'] a {
+  text-decoration: underline !important;
+}
+
+/* Destacar Títulos */
+.highlight-headings h1, .highlight-headings h2, .highlight-headings h3, .highlight-headings h4, .highlight-headings h5, .highlight-headings h6 {
+  background-color: rgba(0, 123, 255, 0.2); /* Fundo azul translúcido */
+  padding: 0.2em;
+}
+
+/* Modo Monocromático */
+.grayscale {
+  filter: grayscale(100%);
+}
+
+/* Acessibilidade - Tamanhos de Fonte */
+.font-normal {
+  font-size: 1rem;
+}
+
+.font-large {
+  font-size: 1.25rem;
+}
+
+.font-large * {
+  font-size: 1.25rem !important;
+}
+
+/* Manter tamanho de fonte fixo no painel de acessibilidade */
+.font-large [role="dialog"],
+.font-large [role="dialog"] *,
+.font-xlarge [role="dialog"],
+.font-xlarge [role="dialog"] *,
+.font-xxlarge [role="dialog"],
+.font-xxlarge [role="dialog"] *,
+.font-large [data-radix-dialog-content],
+.font-large [data-radix-dialog-content] *,
+.font-xlarge [data-radix-dialog-content],
+.font-xlarge [data-radix-dialog-content] *,
+.font-xxlarge [data-radix-dialog-content],
+.font-xxlarge [data-radix-dialog-content] *,
+.font-large .accessibility-panel-fixed-font,
+.font-large .accessibility-panel-fixed-font *,
+.font-xlarge .accessibility-panel-fixed-font,
+.font-xlarge .accessibility-panel-fixed-font *,
+.font-xxlarge .accessibility-panel-fixed-font,
+.font-xxlarge .accessibility-panel-fixed-font * {
+  font-size: 1rem !important;
+}
+
+.font-xlarge {
+  font-size: 1.5rem;
+}
+
+.font-xlarge * {
+  font-size: 1.5rem !important;
+}
+
+.font-xxlarge {
+  font-size: 1.75rem;
+}
+
+.font-xxlarge * {
+  font-size: 1.75rem !important;
+}
+
+.font-large button,
+.font-xlarge button,
+.font-xxlarge button {
+  padding: 0.75rem 1.5rem;
+  min-height: 3rem;
+}
+
+.font-xlarge button,
+.font-xxlarge button {
+  padding: 1rem 2rem;
+  min-height: 3.5rem;
+}
+
+.font-xxlarge button {
+  padding: 1.25rem 2.5rem;
+  min-height: 4rem;
+}
+
+/* Alto Contraste */
+.high-contrast {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+  --primary: 0 0% 0%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 90%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 0 0% 95%;
+  --muted-foreground: 0 0% 20%;
+  --accent: 0 0% 90%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 0%;
+  --input: 0 0% 0%;
+  --ring: 0 0% 0%;
+}
+
+.high-contrast * {
+  border-color: hsl(0 0% 0%) !important;
+}
+
+.high-contrast button,
+.high-contrast a {
+  border: 2px solid hsl(0 0% 0%) !important;
+  font-weight: bold;
+}
+
+/* Botões Grandes */
+.large-buttons button,
+.large-buttons .button {
+  min-height: 3.5rem !important;
+  min-width: 8rem !important;
+  padding: 1rem 2rem !important;
+  font-size: 1.125rem !important;
+  font-weight: 600;
+}
+
+.large-buttons input,
+.large-buttons select,
+.large-buttons textarea {
+  min-height: 3rem !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1.125rem !important;
+}
+
+/* Visual Simplificado */
+.simplified-view * {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.simplified-view .card {
+  border: 2px solid hsl(var(--border)) !important;
+  background: hsl(var(--card)) !important;
+}
+
+.simplified-view button {
+  border: 2px solid hsl(var(--primary)) !important;
+}
+
+/* Foco visível para navegação por teclado */
+*:focus-visible {
+  outline: 3px solid hsl(var(--ring)) !important;
+  outline-offset: 2px !important;
+}
+
+.high-contrast *:focus-visible {
+  outline: 4px solid hsl(0 0% 0%) !important;
+  outline-offset: 3px !important;
+}
+
+/* Espaçamento aumentado para idosos */
+.font-large *,
+.font-xlarge *,
+.font-xxlarge * {
+  line-height: 1.6 !important;
+}
+
+.font-xlarge *,
+.font-xxlarge * {
+  letter-spacing: 0.025em !important;
+}
+
+/* Melhorias de contraste para texto pequeno */
+.high-contrast small,
+.high-contrast .text-sm,
+.high-contrast .text-xs {
+  color: hsl(0 0% 0%) !important;
+  font-weight: 600;
+}
+
+/*
+  Garante que o Dialog (shadcn/ui) do painel de acessibilidade
+  fique por cima de todos os elementos do Django Admin (que usa z-index alto).
+*/
+[role="dialog"] {
+  z-index: 99999 !important;
+}
