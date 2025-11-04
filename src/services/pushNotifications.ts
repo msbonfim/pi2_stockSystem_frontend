@@ -109,7 +109,7 @@ class PushNotificationService {
     console.log("📤 Enviando subscription para o backend:", payload.endpoint);
 
     try {
-      const response = await api.post("/push-subscriptions/", payload);
+      const response = await api.post("/api/push-subscriptions/", payload);
       if (response.status === 201 || response.status === 200) {
         console.log("✅ Subscription salva no backend!");
       } else {
@@ -118,8 +118,12 @@ class PushNotificationService {
           response.status
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Erro de rede ao enviar subscription:", error);
+      if (error.response) {
+        console.error("Status:", error.response.status);
+        console.error("Data:", error.response.data);
+      }
     }
   }
 
