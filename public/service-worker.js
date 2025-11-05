@@ -1,4 +1,5 @@
 // Service Worker para Push Notifications e Cache
+// Este arquivo será usado pelo VitePWA com injectManifest
 
 const CACHE_NAME = "stocksystem-cache-v1";
 const urlsToCache = [
@@ -42,30 +43,41 @@ self.addEventListener("activate", (event) => {
 
 // Listener para push notifications
 self.addEventListener("push", (event) => {
-  console.log("Push event recebido", event);
-
-  let data = {
+  console.log("🔔 Push event recebido!", event);
+  
+  let notificationData = {
     title: "StockSystem",
     body: "Você tem uma nova notificação",
     icon: "/pwa-192x192.png",
     badge: "/pwa-64x64.png",
   };
 
+  // Tenta extrair dados do payload
   if (event.data) {
     try {
-      data = event.data.json();
+      const payload = event.data.json();
+      console.log("📦 Payload recebido:", payload);
+      notificationData = {
+        title: payload.title || notificationData.title,
+        body: payload.body || payload.message || notificationData.body,
+        icon: payload.icon || notificationData.icon,
+        badge: payload.badge || notificationData.badge,
+        data: payload.data || {},
+        tag: payload.tag || "notification",
+      };
     } catch (e) {
-      data.body = event.data.text();
+      console.log("⚠️ Erro ao parsear JSON, usando texto:", e);
+      notificationData.body = event.data.text();
     }
   }
 
   const options = {
-    body: data.body || data.message,
-    icon: data.icon || "/pwa-192x192.png",
-    badge: data.badge || "/pwa-64x64.png",
-    data: data.data || {},
-    tag: data.tag || "notification",
-    requireInteraction: data.requireInteraction || false,
+    body: notificationData.body || notificationData.message,
+    icon: notificationData.icon || "/pwa-192x192.png",
+    badge: notificationData.badge || "/pwa-64x64.png",
+    data: notificationData.data || {},
+    tag: notificationData.tag || "notification",
+    requireInteraction: false,
     vibrate: [200, 100, 200], // Vibra no celular
     actions: [
       {
@@ -79,8 +91,16 @@ self.addEventListener("push", (event) => {
     ],
   };
 
+  console.log("📢 Exibindo notificação:", notificationData.title, options.body);
+
   event.waitUntil(
-    self.registration.showNotification(data.title || "StockSystem", options)
+    self.registration.showNotification(notificationData.title || "StockSystem", options)
+      .then(() => {
+        console.log("✅ Notificação exibida com sucesso!");
+      })
+      .catch((error) => {
+        console.error("❌ Erro ao exibir notificação:", error);
+      })
   );
 });
 

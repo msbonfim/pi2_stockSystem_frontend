@@ -8,13 +8,12 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'prompt', // Mudado de 'autoUpdate' para 'prompt' para evitar recarregamentos automáticos
-      // Configura o cache do Service Worker
-      workbox: {
+      registerType: 'prompt',
+      strategies: 'injectManifest',
+      srcDir: 'public',
+      filename: 'service-worker.js',
+      injectManifest: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,otf}'],
-        // Evitar recarregamentos automáticos
-        skipWaiting: false,
-        clientsClaim: false,
       },
       // Configura o manifesto da PWA
       manifest: {
